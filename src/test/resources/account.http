@@ -1,0 +1,8 @@
+### accountInfo register
+POST http://localhost:8888/accountInfo/register
+Content-Type: application/json
+
+{
+  "tel": "18120788755",
+  "nickName": "蓝士钦5"
+}

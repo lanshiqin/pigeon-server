@@ -1,0 +1,8 @@
+### accountInfo register
+POST http://localhost:8888/friend/addFriendReq
+Content-Type: application/json
+
+{
+  "accountId": "1",
+  "friendId": "3"
+}

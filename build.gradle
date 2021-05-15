@@ -7,10 +7,14 @@ group = 'com.lanshiqin'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 repositories {
+    maven { url 'https://maven.aliyun.com/nexus/content/repositories/central/' }
     mavenCentral()
 }
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation("mysql:mysql-connector-java:8.0.24")
+    implementation 'com.alibaba:fastjson:1.2.72'
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
