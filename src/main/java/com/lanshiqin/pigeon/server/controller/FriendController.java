@@ -1,6 +1,7 @@
 package com.lanshiqin.pigeon.server.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.lanshiqin.pigeon.server.Interceptor.JwtInterceptor;
 import com.lanshiqin.pigeon.server.base.BaseResponse;
 import com.lanshiqin.pigeon.server.model.AgreeFriendRequest;
 import com.lanshiqin.pigeon.server.model.FriendAddRequest;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +29,14 @@ public class FriendController {
     @Resource
     private AccountRelationService accountRelationService;
 
+    @Resource
+    private JwtInterceptor jwtInterceptor;
+
     @PostMapping("/addFriendReq")
     public BaseResponse<String> addFriendReq(@RequestBody FriendAddRequest request) {
         logger.info("addFriendReq parameter: {}", JSON.toJSONString(request));
-        friendAddMessageService.addFriendReq(request.getAccountId(), request.getFriendId(), request.getRemark());
+        String accountId = jwtInterceptor.getUserInfo().getJwtUserId();
+        friendAddMessageService.addFriendReq(Integer.valueOf(accountId), request.getFriendId(), request.getRemark());
         return BaseResponse.success("添加请求已发送");
     }
 

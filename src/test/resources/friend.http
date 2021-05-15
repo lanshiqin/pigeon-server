@@ -1,8 +1,8 @@
 ### accountInfo register
 POST http://localhost:8888/friend/addFriendReq
 Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiJ9.eyJqd3RfdXNlck5hbWUiOiLok53lo6vpkqYiLCJzdWIiOiIxIiwiaXNzIjoicGlnZW9uLXNlcnZlciIsImlhdCI6MTYyMTA5MDEzMywiZXhwIjoxNjIxMDk3MzMzfQ.MAldZ8I5L1a9bCx_SLeC2F9fYOPRuml8koX0xZMvjzY
 
 {
-  "accountId": "1",
   "friendId": "3"
 }

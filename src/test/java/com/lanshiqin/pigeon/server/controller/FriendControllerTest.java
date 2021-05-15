@@ -7,10 +7,13 @@ import com.lanshiqin.pigeon.server.mapper.FriendAddMessageMapper;
 import com.lanshiqin.pigeon.server.model.AccountRegisterRequest;
 import com.lanshiqin.pigeon.server.model.AgreeFriendRequest;
 import com.lanshiqin.pigeon.server.model.FriendAddRequest;
+import com.lanshiqin.pigeon.server.util.JwtUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -46,9 +49,18 @@ class FriendControllerTest {
     @Autowired
     private FriendAddMessageMapper friendAddMessageMapper;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    private String token = "";
+
+    private static final Logger logger = LoggerFactory.getLogger(FriendControllerTest.class);
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        token = jwtUtil.generateToken("1", "蓝士钦");
+        logger.info("token:{}",token);
     }
 
     @AfterEach
@@ -59,12 +71,12 @@ class FriendControllerTest {
     void addFriendReq() {
         try {
             FriendAddRequest request = new FriendAddRequest();
-            request.setAccountId(1);
             request.setFriendId(1);
             request.setRemark("请求添加你为好友");
             String requestContent = JSON.toJSONString(request);
             MvcResult mvcResult = mockMvc.perform(
                     MockMvcRequestBuilders.post("/friend/addFriendReq")
+                            .header("token", token)
                             .contentType(MediaType.APPLICATION_JSON).content(requestContent))
                     .andExpect(MockMvcResultMatchers.status().is(200))
                     .andDo(MockMvcResultHandlers.log())
@@ -96,6 +108,7 @@ class FriendControllerTest {
             String requestContent = JSON.toJSONString(request);
             MvcResult mvcResult = mockMvc.perform(
                     MockMvcRequestBuilders.post("/friend/agreeAddFriend")
+                            .header("token", token)
                             .contentType(MediaType.APPLICATION_JSON).content(requestContent))
                     .andExpect(MockMvcResultMatchers.status().is(200))
                     .andDo(MockMvcResultHandlers.log())
@@ -127,6 +140,7 @@ class FriendControllerTest {
             String requestContent = JSON.toJSONString(request);
             MvcResult mvcResult = mockMvc.perform(
                     MockMvcRequestBuilders.post("/friend/disAgreeAddFriend")
+                            .header("token", token)
                             .contentType(MediaType.APPLICATION_JSON).content(requestContent))
                     .andExpect(MockMvcResultMatchers.status().is(200))
                     .andDo(MockMvcResultHandlers.log())
@@ -148,6 +162,7 @@ class FriendControllerTest {
         try {
             MvcResult mvcResult = mockMvc.perform(
                     MockMvcRequestBuilders.get("/friend/getFriendList")
+                            .header("token", token)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().is(200))
                     .andDo(MockMvcResultHandlers.log())

@@ -4,6 +4,7 @@ import com.lanshiqin.pigeon.server.entity.AccountInfo;
 import com.lanshiqin.pigeon.server.exception.BusinessException;
 import com.lanshiqin.pigeon.server.mapper.AccountInfoMapper;
 import com.lanshiqin.pigeon.server.model.LoginResponse;
+import com.lanshiqin.pigeon.server.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,9 @@ public class AccountInfoService {
 
     @Resource
     private AccountInfoMapper accountInfoMapper;
+
+    @Resource
+    private JwtUtil jwtUtil;
 
     @Transactional
     public void register(String tel, String nickName) {
@@ -32,7 +36,8 @@ public class AccountInfoService {
         if (accountInfo == null) throw new BusinessException("账号不存在");
         if (!passWord.equals(accountInfo.getPassWord())) throw new BusinessException("账号或密码错误");
 
-        loginResponse.setToken("token_" + accountInfo.getAccountId());
+        String token = jwtUtil.generateToken(accountInfo.getAccountId().toString(),accountInfo.getNickName());
+        loginResponse.setToken(token);
 
         accountInfo.setIpAddress("192.168.1.1");
         accountInfoMapper.updateById(accountInfo);
